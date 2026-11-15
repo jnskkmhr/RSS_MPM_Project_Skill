@@ -22,7 +22,7 @@ Shared context for the RSS MPM project. Humans and agents read this first. Keep 
 
 | Repo | Remote / branch | Local path (Junnosuke's machine) | Holds |
 |---|---|---|---|
-| Context (this repo) | TODO | `~/RSS_27/RSS_MPM_Project_Skill` | Onboarding, tasks, outputs, checks |
+| Context (this repo) | `jnskkmhr/RSS_MPM_Project_Skill`, `main` | `~/RSS_27/RSS_MPM_Project_Skill` | Onboarding, tasks, outputs, checks |
 | Paper | `jnskkmhr/RSS_Humanoid_MPM`, `main` | `~/RSS_27/RSS_Humanoid_MPM` | LaTeX; edit `sections/*.tex`, build with `latexmk paper.tex` |
 | IsaacLab (MPM tasks) | `jnskkmhr/IsaacLab`, `junnosuke/mpm_rl_task` | `~/isaac/IsaacLab` | Moving-patch MPM, G1 / box-push / UR10 tasks, RFT soft contact, baselines |
 | IsaacLab (Particle NeRD) | `jnskkmhr/IsaacLab`, `junnosuke/particle_nerd` | `~/isaac/IsaacLab-particle-nerd` | Particle NeRD model, data collection, NeRD-backed G1 tasks |
