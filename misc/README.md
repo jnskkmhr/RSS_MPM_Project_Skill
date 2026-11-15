@@ -33,3 +33,15 @@ T6 and T1 are the most self-contained, so start with one of them. T3 before T4 a
 - The handoff goes in `outputs/T<n>.md` with status "partial"; it is replaced by real results as the task proceeds.
 
 The per-task guides share one structure and one handoff format. If you change the format, change it in all six.
+
+## Opening all sessions at once
+
+`scripts/sessions.sh` opens one tmux window per session (lead, paper, T1 to T6), each in its own directory with the master repo added. It works under byobu as well.
+
+```bash
+scripts/sessions.sh --new T1      # first launch of a task: starts a Claude session named rss-T1
+scripts/sessions.sh               # later: resumes every named session
+scripts/sessions.sh --dry-run     # print the commands without launching
+```
+
+Sessions are resumed by name (`rss-T1`, ..., `rss-lead`, `rss-paper`; T2 uses the existing `mpm-object-push`), so start each one through the script with `--new` the first time. Windows whose worktree does not exist yet are skipped.
