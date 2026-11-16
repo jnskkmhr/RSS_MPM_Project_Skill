@@ -4,7 +4,7 @@ Written by the lead. Only results with a passing check in `checks/` go here, and
 
 | Question | Claim to support | Task | Output | Check | Status |
 |---|---|---|---|---|---|
-| Q1 | Moving patch bounds cost and preserves full-domain physics, including revisits | T1 | — | — | no output yet |
+| Q1 | Recycling vs. caching: which reproduces full-domain terrain response on fresh and revisited terrain (plus simulation performance numbers) | T1 | — | — | no output yet |
 | Q2 | Policies train across embodiments and tasks at practical wall-clock cost | T2 | — | — | no output yet |
 | Q3 | MPM training improves sim-to-real over rigid and RFT; gait metrics explain why | T3 | — | — | no output yet |
 | Q4 | Sensitivity to material randomization and particle resolution | T4 | — | — | no output yet |
