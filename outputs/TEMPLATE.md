@@ -9,6 +9,7 @@
 - Command:
 - Seeds, num_envs, GPU:
 - Artifacts (paths, W&B run IDs):
+- Slides: `site/T<n>/index.html`
 
 ## Results
 One subsection per acceptance criterion in the task file. Numbers in tables, with units and number of trials.
