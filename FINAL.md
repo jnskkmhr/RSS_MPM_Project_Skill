@@ -32,6 +32,8 @@ Conditions for every number: box probe (0.2 x 0.2 x 0.1 m, 10 kg), material `pop
 - Drag on the revisited lap: full -26.7 N, with cache -29.4 N, without cache -54.3 N. The cache reproduces the drop in drag on revisit to within 10%; without it there is no drop.
 - G1 on the same path: footprints are kept with the cache and lost without it. The percentages in the output depend on the reference level and are not merged.
 
+> **On hold (2026-11-24, unchecked finding from T1).** The box forces in this section were recorded at one physics step in four, on a gantry whose target jumps once per control step. Absolute forces are understated (by about 1.5 times at 0.5 m/s in T1's test). Whether the ratios between terrain modes hold on the mean force is being rerun by T1. Heights and cost numbers are not affected.
+
 **Caveats that limit what the paper can say:**
 - **With sleeping on, the cache's force does not match full:** 31% low on fresh sand and 17% low on the revisited lap. The history result holds for sleep off only.
 - **The history runs skip the cache's settled tile template**, by an override in the probe. The task as shipped uses the template, which makes fresh cached sand 43 to 57% stiffer in drag than a full bed.
@@ -117,6 +119,8 @@ Caveats added by the third check:
 - **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
 
 ### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 3)
+
+> **On hold (2026-11-24, unchecked finding from T1).** Every MPM box force below, and every DEM / MPM force ratio, is under question. The box probe updates the gantry target once per control step (20 ms) and records the sand force at the last of the four physics steps, where it is lowest. T1 measured at a 4 cm voxel and 0.5 m/s: recorded -23.5 N on a stiff gantry and -90 N on the T1 gantry, against a mean over all physics steps of -125 and -143 N, and about -136 N with a gantry that follows the target smoothly. The stiff-gantry values are therefore the most understated, and "DEM / MPM = 2.3" does not stand as measured. The deformation, compaction, creep and tilt results do not depend on the force recording. Do not use the forces in the paper until the MPM runs are repeated with the mean force.
 
 Checked three times in `checks/T8.md` (pass with caveats each time). Every number below reproduces from the raw files. Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations are reported: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
 
