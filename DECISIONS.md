@@ -30,6 +30,8 @@ Append-only. Newest at the bottom. One entry per decision: date, decision, why.
 
 - 2026-11-24: Paper questions restructured by Junnosuke. Q1: is MPM accurate with respect to DEM (T8). Q2: is MPM tractable for policy training (T1): 2.1 terrain size, 2.2 parallel environments, 2.3 tile cache preserves history, shown as a figure in the method section with no paragraph of its own; the drag-on-revisit result is dropped. Q3: how MPM benefits policy learning: 3.1 locomotion on steep slopes and softer materials (T3), 3.2 manipulation with terrain history (Max, to be done), 3.3 locomanipulation, object transport (T2, T3). Q4: does the recipe transfer to several embodiments and tasks and to hardware (T2, T3 hardware). `FINAL.md` and the task files still use the earlier numbering.
 
+- 2026-11-24: Section IV layout fixed by Junnosuke and sent to the paper session. Opening with the goal and Q1 to Q4; A experimental setup (unchanged); B simulation evaluation: B.1 physics accuracy of MPM against DEM (Q1), B.2 compute efficiency of streaming MPM (Q2), with the tile-cache history shown only as a figure in the method section; C baseline methods and ablations (Q3): C-1 locomotion on steeper slopes and softer material, one paragraph each as what, why, how; C-2 manipulation (Max, placeholder); C-3 whole-body object transport as what, why, how, without the box probing, pile-up or track content; D hardware and scalability (Q4). Pending and marked as such in the paper: the DEM against MPM force (being re-measured), and in C-3 whether torso pitch adaptation is minimal in the baselines and whether they fail because of the force (T2 sweep `t2-tow-sands-1`).
+
 ## Open
 
 - Particle NeRD: co-equal contribution or short final subsection?
