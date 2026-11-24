@@ -68,6 +68,18 @@ Checked twice in `checks/T2.md` (first runs, then the rerun of 2026-11-24). Ever
 - **Provenance:** two code states appear within single tables, and the evaluation scripts are not committed.
 - **Not merged:** the lap (history) result, the turning rows, the start-up peak (1.02 to 1.11 times steady on the final checkpoint, not 1.15 to 1.21), and anything on the slides that still shows the earlier checkpoint.
 
+**Sweep over sands from stiff to soft (merged 2026-11-24, `checks/T2.md` Check 3, pass with caveats).** Three tow policies, 15 kg cube, 0.5 m/s command, 16 trials per cell, rigid ground and 12 MPM sands (friction 0.7 and 0.9, densities 250 to 3000 kg/m3, and the named sands), with the cube and with the tether cut; 0.6 m bed, 4 cm voxel, sand kept awake, 12 s settling, start on each sand's settled surface. One sand left out (feet near the base).
+- **The MPM-trained policy walks and tows on every sand:** 16 of 16 on all 12, with and without the cube.
+- **The RFT-trained policy walks on the 7 stiffer sands and falls when the cube is attached.** With the tether cut 110 of 112 trials stay up; with the cube 12 of 112 reach the goal (8, 1, 2, 0, 1, 0, 0 of 16 per sand). It tows 16 of 16 on rigid ground (60 N) and on RFT sand (73 N); on these MPM sands it meets 83 to 94 N.
+- **The rigid-trained policy stays up on none of the sands.**
+- **Torso pitch of the MPM-trained policy rises with tension and then saturates.** 8.5 degrees at 60 N on rigid ground, 15 to 20 degrees at 83 to 106 N, 17 and 19 degrees at 126 and 140 N on the two softest sands, where the cube slows to 0.44 and 0.36 m/s. Rank correlation of tension and pitch +0.84 over 13 grounds.
+- **Loose poppy seed in this sweep:** pull 94 N against the 103 N merged above (8 to 9% lower); pitch agrees.
+
+Caveats:
+- **"The RFT policy fails because sand resists more" is not shown.** Attaching the cube causes the falls, but the policy is already marginal on these sands without load: it walks at 0.63 to 0.71 m/s for a 0.5 m/s command with 13 to 15 degrees of torso pitch against 5.6 degrees on rigid ground. Its falls are forward pitch-overs; the tension is 55 to 70 N until 1.5 s before the fall. Goals fall with tension (rank correlation -0.95) but only over 83 to 92 N, and equally with sinkage and with overspeed. The missing control is a lighter cube on sand and a heavier cube on rigid ground or RFT sand.
+- **The lean is not only a response to tension.** With the tether cut the MPM-trained policy's pitch already rises with softness (9 to 15 degrees); the extra pitch from the cube does not follow tension.
+- **The baselines tow on too few grounds** (rigid 1, RFT 2) to say whether their pitch adapts less.
+
 ### Q3 / T3: walking on slopes and on softer sand (merged 2026-11-24)
 
 Checked twice in `checks/T3.md` (first runs, then the final-checkpoint rerun). Every number below reproduces from the raw trial files. Conditions: G1 walking at a 1.0 m/s command; policies MJWarp `3qymp37c`, RFT `6t0h2ud8`, MPM `aga5ovkp`, all at iteration 19,999, run together in every workflow; evaluated in MPM on a 0.50 m sand bed unless stated; one training run per policy.
