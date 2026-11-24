@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T2 slides</title><style>
+:root{--bg:#fff;--fg:#1c1e21;--mut:#5f6670;--line:#d9dde3;--card:#f5f6f8;--warn:#9a5b00;--warnbg:#fff4dd}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e6e8eb;--mut:#9aa2ad;--line:#33383f;--card:#1e2126;
+--warn:#f0b860;--warnbg:#3a2c12}}
+*{box-sizing:border-box}html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+section{min-height:100vh;padding:40px max(16px,5vw) 56px;border-bottom:1px solid var(--line);scroll-snap-align:start}
+h1{font-size:2rem;margin:0 0 8px}h2{font-size:1.5rem;margin:0 0 4px}h3{font-size:1.05rem;margin:24px 0 8px}
+p,li{max-width:80ch}p{margin:8px 0}.kicker{color:var(--mut);font-size:.85rem;letter-spacing:.04em;text-transform:uppercase}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.75rem;font-weight:600;vertical-align:middle;
+background:var(--warnbg);color:var(--warn);border:1px solid var(--warn)}
+.none{background:var(--card);color:var(--mut);border-color:var(--line)}
+table{border-collapse:collapse;margin:8px 0;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:4px 12px;border-bottom:1px solid var(--line);text-align:left}
+td.n,th.n{text-align:right}th{color:var(--mut);font-weight:600}
+.wrap{overflow-x:auto}figure{margin:16px 0}img{max-width:100%;height:auto;background:#fff;border:1px solid var(--line)}
+figcaption,.src{color:var(--mut);font-size:.8rem;max-width:110ch}code{font-size:.85em;overflow-wrap:anywhere}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:12px}
+video{width:100%;background:#000;display:block}.vcell{background:var(--card);padding:8px;border:1px solid var(--line)}
+.vcell .t{font-size:.9rem;font-weight:600;margin-bottom:4px}.vcell table{font-size:.8rem}
+.missing{color:var(--mut);font-size:.9rem;padding:16px 0}
+.callout{background:var(--card);border-left:4px solid var(--warn);padding:8px 16px;margin:12px 0;max-width:90ch}
+nav{position:fixed;right:12px;bottom:12px;font-size:.8rem;color:var(--mut);background:var(--bg);padding:2px 8px;
+border:1px solid var(--line)}a{color:inherit}
+</style></head><body><section><div class="kicker">RSS MPM project · task T2</div><h1>Policies across embodiments and tasks (Q2)</h1>
+<p>Slides built 2026-11-16. Record: <a href="../../outputs/T2.md">outputs/T2.md</a>. Every result here is <span class="badge">unchecked</span>: nothing has been through <code>checks/T2.md</code>.</p>
+<p>What exists today is the humanoid loco-manipulation part: a G1 policy that pushes a rolling drum on MPM sand, on flat
+and on rough ground. The manipulator and velocity-tracking criteria have no result in this task yet.</p>
+<div class="callout">The pushed object is a drum, not the box named in the task file. On this sand the box tips before it
+slides when pushed at G1 wrist height (slide 3). The owner chose the drum on 2026-11-15.</div>
+<p>Use the arrow keys or scroll to move between slides.</p></section><section><div class="kicker">Criterion 1</div><h2>Franka particle pushing <span class="badge none">not done</span></h2>
+<p>No result. The owner put this part on hold on 2026-11-15: a working Franka policy exists with Max, who is to take it
+over. This task ran nothing for the manipulator. In the IsaacLab checkout only the UR10 task
+<code>IsaacContrib-UR10-Particle-Push</code> exists, with no training run found.</p></section><section><div class="kicker">Criterion 2</div><h2>G1 velocity tracking <span class="badge none">not done</span></h2>
+<p>No evaluation has been run by this task: no success rate, velocity error, or yaw error over a stated number of
+episodes. Trained runs exist in W&amp;B (listed in <a href="../../outputs/T2.md">outputs/T2.md</a>, section 5), but they were not evaluated here and the
+reference policy has not been named.</p></section><section><div class="kicker">Criterion 3</div><h2>G1 pushing on sand <span class="badge">unchecked</span></h2>
+<p>One policy per terrain, each played in a single environment for one 12 s episode, with a straight command and with a
+turn added. The numbers under each clip are from that one episode (<code>examples/RSS/push/eval_drum_push.py</code>, seed 42,
+no observation noise), not from the recorded clip itself, and are not an evaluation over many episodes.</p>
+<div class="vgrid"><div class="vcell"><div class="t">Flat sand, straight <span class="badge">unchecked</span></div><video controls muted loop preload="metadata" src="media/flat_straight.mp4"></video><table><tr><th>Drum speed ratio</th><th>Drum travel</th><th>Yaw rate</th><th>Wrist contact</th><th>Episode</th></tr><tr><td class="n">0.92</td><td class="n">4.36 m</td><td class="n">0.00 rad/s</td><td class="n">0.74</td><td>reached the 12 s limit</td></tr></table><p class="src">flat sand; command 0.35 m/s forward; 1 environment; 10 s at real-time speed. Recorded with <code>isaaclab play --viz newton_rtx</code>, task <code>IsaacContrib-Push-Drum-G1-29dof-MPM-MovingPatch-E2E-Play</code>, checkpoint <code>g1_29dof_mpm_moving_patch_drum_push_e2e/yjspqbop model_21000.pt</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script). Original: <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/flat_straight.mp4</code>.</p></div><div class="vcell"><div class="t">Flat sand, straight + turn <span class="badge">unchecked</span></div><video controls muted loop preload="metadata" src="media/flat_turn.mp4"></video><table><tr><th>Drum speed ratio</th><th>Drum travel</th><th>Yaw rate</th><th>Wrist contact</th><th>Episode</th></tr><tr><td class="n">0.92</td><td class="n">4.37 m</td><td class="n">-0.00 rad/s</td><td class="n">0.75</td><td>reached the 12 s limit</td></tr></table><p class="src">flat sand; command 0.35 m/s forward, 0.3 rad/s yaw; 1 environment; 10 s at real-time speed. Recorded with <code>isaaclab play --viz newton_rtx</code>, task <code>IsaacContrib-Push-Drum-G1-29dof-MPM-MovingPatch-E2E-Play</code>, checkpoint <code>g1_29dof_mpm_moving_patch_drum_push_e2e/yjspqbop model_21000.pt</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script). Original: <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/flat_turn.mp4</code>.</p></div><div class="vcell"><div class="t">Rough sand, straight <span class="badge">unchecked</span></div><video controls muted loop preload="metadata" src="media/rough_straight.mp4"></video><table><tr><th>Drum speed ratio</th><th>Drum travel</th><th>Yaw rate</th><th>Wrist contact</th><th>Episode</th></tr><tr><td class="n">0.88</td><td class="n">4.21 m</td><td class="n">-0.01 rad/s</td><td class="n">0.67</td><td>reached the 12 s limit</td></tr></table><p class="src">rough sand, wave tile, on a random difficulty row from 0 to 5 of 9 (row 5 in the measured episode); command 0.35 m/s forward; 1 environment; 10 s at real-time speed. Recorded with <code>isaaclab play --viz newton_rtx</code>, task <code>IsaacContrib-Push-Drum-G1-29dof-MPM-MovingPatch-E2E-Rough-Play</code>, checkpoint <code>g1_29dof_mpm_moving_patch_drum_push_e2e/secylx9i model_21000.pt</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script). Original: <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/rough_straight.mp4</code>.</p></div><div class="vcell"><div class="t">Rough sand, straight + turn <span class="badge">unchecked</span></div><video controls muted loop preload="metadata" src="media/rough_turn.mp4"></video><table><tr><th>Drum speed ratio</th><th>Drum travel</th><th>Yaw rate</th><th>Wrist contact</th><th>Episode</th></tr><tr><td class="n">0.89</td><td class="n">4.37 m</td><td class="n">-0.01 rad/s</td><td class="n">0.68</td><td>reached the 12 s limit</td></tr></table><p class="src">rough sand, wave tile, on a random difficulty row from 0 to 5 of 9 (row 5 in the measured episode); command 0.35 m/s forward, 0.3 rad/s yaw; 1 environment; 10 s at real-time speed. Recorded with <code>isaaclab play --viz newton_rtx</code>, task <code>IsaacContrib-Push-Drum-G1-29dof-MPM-MovingPatch-E2E-Rough-Play</code>, checkpoint <code>g1_29dof_mpm_moving_patch_drum_push_e2e/secylx9i model_21000.pt</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script). Original: <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/rough_turn.mp4</code>.</p></div></div>
+<div class="callout">Neither policy was trained with a yaw command (the training range is zero), so the turn clips show
+behaviour outside training.</div>
+<h3>Why a drum: the box tips before it slides</h3>
+<p>The box and drum were driven at 0.3 m/s by a controller, without the robot, to measure the force needed.</p>
+<div class="wrap"><table><tr><th>Object</th><th>Push height</th><th class="n">5 kg</th><th class="n">10 kg</th><th class="n">15 kg</th><th>Outcome</th></tr>
+<tr><td>Box 1.0 × 0.8 × 1.0 m</td><td>0.05 m</td><td class="n">37 N</td><td class="n">120 N</td><td class="n">178 N</td><td>slides upright</td></tr>
+<tr><td>Box 1.0 × 0.8 × 1.0 m</td><td>0.83 m (wrists)</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td>tips past 48° within about 0.6 m, every mass</td></tr>
+<tr><td>Drum, radius 0.5 m</td><td>0.83 m (wrists)</td><td class="n">4 N</td><td class="n">8 N</td><td class="n">13 N</td><td>rolls at 0.30 m/s, drifts at most 0.01 m sideways</td></tr></table></div>
+<p class="src">Source: probe script <code>push_physics.py</code> (session scratch, not in the repo) · IsaacLab <code>dcdc2ff3c</code> · numbers in <a href="../../outputs/T2.md">outputs/T2.md</a>, section 11</p>
+<p>Missing for this criterion: an evaluation over a stated number of episodes, object velocity tracking error over that set,
+and the push-force-against-distance plot (only the table above exists). A tipping rate does not apply to a drum.</p></section><section><div class="kicker">Criterion 4</div><h2>Training wall-clock time <span class="badge">unchecked</span></h2>
+<div class="wrap"><table><tr><th>Run</th><th>W&amp;B</th><th>State</th><th class="n">Iterations</th><th class="n">Wall-clock</th>
+<th class="n">Time to speed ratio 0.8</th><th class="n">Last speed ratio</th></tr><tr><td>Rigid ground, box (from scratch, 8 GPUs x 512 envs)</td><td><code>g1_29dof_object_push_e2e/df0fg7gz</code></td><td>finished</td><td class='n'>19,988</td><td class='n'>6.0 h</td><td class='n'>0.5 h</td><td class='n'>0.87</td></tr><tr><td>Flat sand, drum (fine-tune, 40 GPUs x 64 envs)</td><td><code>g1_29dof_mpm_moving_patch_drum_push_e2e/yjspqbop</code></td><td>running</td><td class='n'>1,487</td><td class='n'>8.4 h</td><td class='n'>2.4 h</td><td class='n'>0.89</td></tr><tr><td>Rough sand, drum (fine-tune, 40 GPUs x 64 envs)</td><td><code>g1_29dof_mpm_moving_patch_drum_push_e2e/secylx9i</code></td><td>running</td><td class='n'>553</td><td class='n'>3.2 h</td><td class='n'>0.3 h</td><td class='n'>0.67</td></tr></table></div>
+<figure><img src="fig/learning_curves.png" alt="Learning curves against wall-clock time">
+<figcaption>Object speed over commanded speed during training, 15-point rolling mean, against W&amp;B wall-clock time since
+each run started. Sand runs are fine-tunes: flat sand starts from the rigid box policy, rough sand starts from the flat sand
+policy, so their times do not include the earlier stage. The rough run starts on the easiest terrain row and its curriculum raises the
+difficulty as it trains, so its ratio is measured on harder ground over time. Built by <code>examples/RSS/push/site_slides.py</code> from W&amp;B
+history; the plotted data is in <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/curves</code>. IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script).</figcaption></figure>
+<p>GPUs are L40 or L40S on OSMO. Manipulator and velocity-tracking training times: not recorded by this task.</p></section><section><div class="kicker">Criterion 5</div><h2>Hardware <span class="badge none">not done</span></h2>
+<p>No hardware trial has been run for any task. No pushing policy has gone through the sim-to-sim gate (T6).</p></section><section><div class="kicker">Criterion 6</div><h2>Snapshot figures <span class="badge">unchecked</span></h2>
+<p>Frame strips from the clips, as placeholders. They are not paper figures: the camera and framing are the
+defaults of the play viewer (RTX rendering). The drum is drawn with visible flat facets. Franka and velocity-tracking snapshots: not done.</p><figure><img src="fig/flat_straight.png" alt="Flat sand, straight"><figcaption>Flat sand, straight: frames every 2 s from the clip on the pushing slide. Built by <code>examples/RSS/push/site_slides.py</code> from <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/flat_straight.mp4</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script).</figcaption></figure><figure><img src="fig/flat_turn.png" alt="Flat sand, straight + turn"><figcaption>Flat sand, straight + turn: frames every 2 s from the clip on the pushing slide. Built by <code>examples/RSS/push/site_slides.py</code> from <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/flat_turn.mp4</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script).</figcaption></figure><figure><img src="fig/rough_straight.png" alt="Rough sand, straight"><figcaption>Rough sand, straight: frames every 2 s from the clip on the pushing slide. Built by <code>examples/RSS/push/site_slides.py</code> from <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/rough_straight.mp4</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script).</figcaption></figure><figure><img src="fig/rough_turn.png" alt="Rough sand, straight + turn"><figcaption>Rough sand, straight + turn: frames every 2 s from the clip on the pushing slide. Built by <code>examples/RSS/push/site_slides.py</code> from <code>/home/jkamohara/isaac/IsaacLab/logs/rss_push/videos/rough_turn.mp4</code>, IsaacLab <code>dcdc2ff3c</code> with uncommitted changes (the drum packages and this script).</figcaption></figure></section><section><div class="kicker">Not done / caveats</div><h2>What weakens these results</h2>
+<ul>
+<li>Every pushing number on slide 3 is one episode in one environment. There is no success rate over many episodes.</li>
+<li>The object is a drum. The box of the task file cannot be pushed upright at wrist height on this sand; why the box
+sinks and ploughs as much as it does was not resolved.</li>
+<li>The arms hold a fixed pushing posture; the policy was not trained to steer, and the turn clips show that.</li>
+<li>Both policies were still training when the clips were recorded; the rough clips use its first saved checkpoint, 500 iterations after it resumed from the flat policy.</li>
+<li>The rough clips and measurements cover one wave tile only, not the bump, slope, or flat tiles.</li>
+<li>The drum packages and the scripts used here are uncommitted on top of IsaacLab <code>dcdc2ff3c</code>.</li>
+<li>Criteria 1, 2 and 5 have no result.</li>
+</ul></section><nav>← → to change slide</nav><script>
+const s=[...document.querySelectorAll('section')];
+addEventListener('keydown',e=>{const d={ArrowRight:1,PageDown:1,ArrowLeft:-1,PageUp:-1}[e.key];if(!d)return;
+if(e.target.tagName==='VIDEO')return;e.preventDefault();
+const y=scrollY+2;let i=s.findIndex(x=>x.offsetTop>y);i=i<0?s.length:i;
+const t=s[Math.max(0,Math.min(s.length-1,d>0?i:i-2))];t.scrollIntoView();});
+</script></body></html>
