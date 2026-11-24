@@ -116,20 +116,30 @@ Caveats added by the third check:
 - **Nothing rises beside the foot** (0.00 to 0.08 L), and around the footprint 65 to 88% of the sunk volume is compaction, a density rise that reaches the bed base. This is the compaction of the sparsely sampled bed.
 - **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
 
-### T8: MPM against DEM in a box drag (merged 2026-11-24)
+### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 3)
 
-Checked twice in `checks/T8.md` (pass with caveats). Every number below reproduces from the raw files. Conditions: box dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators; 6.13 cm in MPM, 6.04 cm in DEM); MPM at task settings (3 cm voxel, about 1.25 particles per cell edge); DEM in Chrono DEM-Engine with material A calibrated to the task-sampled MPM sand; all runs on OSMO. No row of the results table depends on this section yet; it feeds the planned accuracy section.
+Checked three times in `checks/T8.md` (pass with caveats each time). Every number below reproduces from the raw files. Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations are reported: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
 
-- **Force.** MPM -59.4 N (four beds, -58.2 to -61.3). DEM -81.3 N with 15 mm grains (three seeds), ratio 1.37; -69.6 N with 9 mm grains (one run), ratio 1.17. The DEM force is still rising in the averaging window (9% over three seeds); on a longer bed the ratio is 1.42 (one run each).
-- **Deformation.** Trench 8.0 cm in MPM against 6.0 cm in DEM. MPM builds no side berm (-0.2 cm); DEM builds 2.6 cm. The MPM bed sinks 0.4 cm far from the trench; the DEM bed does not move.
-- **Moving sand.** 11.0 kg in MPM against 11.5 kg in DEM at equal depth; the moving zone is narrower in MPM (half-width 18 to 19 cm against 21 to 24 cm).
-- **Voxel size.** At task sampling the MPM force goes from -68 N at 4 cm to -34 N at 1 cm.
-- **Particle sampling.** At a 4 cm voxel the force rises from -68 N at 1.25 particles per edge to -155 N at 4 and -160 N at 5. With 1.6 or more per edge the bed keeps its density near 640 kg/m3 (700 to 780 at task sampling) and stops creeping in the tilt test; task-sampled sand creeps from 20 degrees.
+**How the box is held matters.** The MPM box is a body on a PD gantry. On a stiff gantry (1e6 N/m or more) the force no longer depends on the stiffness; this is the intended test. On the softer gantry of T1's box probe (1e5 N/m) the force is 1.7 to 1.9 times higher, although the box sits within 1 mm of the same depth; the cause is not identified.
+
+| MPM setting | MPM drag force | DEM A | DEM / MPM |
+|---|---|---|---|
+| Task settings, stiff gantry (4 grid alignments); DEM at 733 kg/m3 | -34 N | -79 N | 2.3 |
+| Task settings, T1 gantry (4 beds); DEM at 733 kg/m3 | -59.4 N | -81.3 N | 1.37 |
+| Tuned, 2 cm voxel (4 alignments); DEM at 640 kg/m3 | -55.6 N | -71.1 N | 1.28 |
+| Tuned, 1 cm voxel (4 alignments); DEM at 640 kg/m3 | -45.1 N | -71.1 N | 1.58 |
+
+- **Tuned MPM reproduces the surface deformation of DEM.** At 1 cm: trench 5.6 against 6.1 cm, side berm 2.9 against 2.4 cm, correlation of the height-change maps 0.96, which is the level of one DEM seed against another. The bed does not compact (it stays at 640 kg/m3) and does not creep.
+- **At task settings the deformation differs.** Trench 8.0 against 6.0 cm, no side berm (DEM 2.6 cm), map correlation 0.84; the bed compacts from 640 to about 731 kg/m3, sinks during the drag, and creeps from a 20 degree tilt. These deformation numbers are from the T1 gantry.
+- **The MPM force is not converged in voxel size.** Tuned: -84.2 / -64.5 / -55.6 / -51.6 / -45.1 N at 4 / 3 / 2 / 1.5 / 1 cm, and about -42 N at 0.75 cm. The step from 1.5 to 1 cm (-13%) holds in all four alignments; the step to 0.75 cm (-2 to -7%) rests on two alignments. A 5 mm voxel does not fit on an L40S.
+- **The tuned setting is converged in the solver settings.** At 1 cm: 1000 iterations +2%, half the time step +5%; 25 iterations -24%, twice the step -17%.
+- **DEM is not converged in grain size either:** -71.1 N with 15 mm grains, ratio 1.41 with 11 mm grains (one run).
 
 Caveats:
-- **No converged MPM value.** The voxel dependence persists when well sampled (factor 1.5 from 4 to 1.5 cm at 2 to 3 per edge). Well-sampled MPM holds slopes above its own 36 degree friction angle, so it is not a validated reference either.
-- **Task-sampled sand is 2.3 to 2.8 times weaker in drag than well-sampled sand,** from single runs.
-- **The calibration target is ambiguous:** DEM material A was matched to the task-sampled sand.
-- **Most resolution and sampling points are single runs;** the four MPM beds share one grid alignment, and shifting the bed in z moves the force by up to 19%.
-- **Vertical loading differs:** the MPM box presses with 222 N at the start of the drag (17 N after 5 cm; 2 to 3% of the force in the window); well-sampled runs carry up to 2090 N and reach depth only after about 0.2 m.
-- **Provenance:** `~/isaac/dem_compare` (commit `e12656d`) has no remote.
+- **No converged MPM force,** so every ratio is for one voxel size. DEM gives more force than MPM in every setting run.
+- **Tuned MPM sand is stronger at rest than specified:** it slides at 40 degrees, above the preset's 36 degrees and DEM A's 32.5 degrees. Less sand moves in tuned MPM than in DEM (about 30% less).
+- **Neither simulator is the truth,** and there is no experiment.
+- **The box starts the tuned drags with a large vertical preload** (1345 to 2499 N), which falls to 15 N within 4 cm; runs with different preloads agree within 2%.
+- **Withdrawn:** round 2's dense-sampling forces (-107 to -165 N) and the statement that task-sampled sand is 2.3 to 2.8 times weaker; they came from the soft gantry.
+- **Effect on T1:** the box forces in the T1 section above were measured on the same soft gantry. Ratios between terrain modes are unaffected as far as is known; absolute forces are those of a compliantly held box.
+- **Provenance:** `~/isaac/dem_compare` (commit `4770f64`) has no remote.
