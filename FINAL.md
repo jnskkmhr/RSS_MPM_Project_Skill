@@ -110,6 +110,12 @@ Caveats added by the third check:
 - **Still not merged:** gait quantities and sole-tip angles, the 0.65 m bed result in T and W, and the explanation of MPM's advantage, which T3's own rule does not pass in either setting.
 
 
+**Sand flow under the foot across materials (merged 2026-11-24, `checks/T3.md` Check 4, pass with caveats).** Level ground, awake bed (12 s settling), 10 trials per cell, 170 to 247 footprints per cell.
+- **More sand leaves from under the sole on softer ground.** Sand that left the column under the sole per stance, MJWarp / RFT / MPM, in litres at nominal density: dense sand 0.16 / 0.17 / 0.18; beach sand 0.39 / 0.33 / 0.37; packed poppy seed 0.83 / 0.49 / 0.51; light sand 1.08 / 0.79 / 0.79; loose poppy seed none / 1.53 / 1.33 (MJWarp falls). These volumes are overstated by 22 to 50%, because the settled bed is denser than nominal.
+- **RFT and MPM move the same amount of sand,** and on dense and beach sand all three policies do, while their velocity errors differ (0.11, 0.13 and 0.05 m/s on dense sand). The tracking gap between RFT and MPM has no measured cause.
+- **Nothing rises beside the foot** (0.00 to 0.08 L), and around the footprint 65 to 88% of the sunk volume is compaction, a density rise that reaches the bed base. This is the compaction of the sparsely sampled bed.
+- **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
+
 ### T8: MPM against DEM in a box drag (merged 2026-11-24)
 
 Checked twice in `checks/T8.md` (pass with caveats). Every number below reproduces from the raw files. Conditions: box dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators; 6.13 cm in MPM, 6.04 cm in DEM); MPM at task settings (3 cm voxel, about 1.25 particles per cell edge); DEM in Chrono DEM-Engine with material A calibrated to the task-sampled MPM sand; all runs on OSMO. No row of the results table depends on this section yet; it feeds the planned accuracy section.
