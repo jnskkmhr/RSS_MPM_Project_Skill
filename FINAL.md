@@ -151,7 +151,7 @@ Checked twice in `checks/T3.md` (first runs, then the final-checkpoint rerun). E
 - **Low-friction beds collapse and are not material results.** The bed's own settling depends on friction only: 8 cm of 50 cm at friction 0.9, 30 cm at friction 0.1 (T). Friction 0.3 and below is excluded in T, 0.5 and below in W. The threshold (a third of the depth) was set after probing three friction values.
 
 Caveats added by the third check:
-- **Trials are not independent beds.** Each run has one bed template; only the robot start varies, and the grid uses the same five starts on all sands.
+- **Trials start from one settled sand.** Each robot has its own sand and its own tile, but every robot starts on a copy of the same settled bed; only the robot start varies, and the grid uses the same five starts on all sands. Success does not depend on the robot's slot in a run (RFT at +30 degrees: 6, 10, 9, 8, 7 of 24 by slot; MPM 8 of 8 in every slot).
 - **Whether the MPM-to-RFT error gap grows with softness is not settled:** it does not on the ladder; on the T grid it rises to 0.08 to 0.13 m/s at 250 kg/m3; W shows no trend.
 - **Sampling density** (about 1.25 particles per cell edge) is a condition of every sinkage and sand-motion number; see `DECISIONS.md`, Open.
 - **Still not merged:** gait quantities and sole-tip angles, the 0.65 m bed result in T and W, and the explanation of MPM's advantage, which T3's own rule does not pass in either setting.
