@@ -189,9 +189,9 @@ Caveats added by the third check:
 - **Nothing rises beside the foot** (0.00 to 0.08 L), and around the footprint 65 to 88% of the sunk volume is compaction, a density rise that reaches the bed base. This is the compaction of the sparsely sampled bed.
 - **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
 
-### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 6)
+### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 7)
 
-Checked seven times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
+Checked eight times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
 
 **Deformation.**
 - **Tuned MPM reproduces the surface deformation of DEM.** At 1 cm: trench 5.7 against 6.1 cm, side berm 2.8 against 2.4 cm, correlation of the height-change maps 0.95, the level of one DEM seed against another (0.96 to 0.97). The bed does not compact (it stays at 640 kg/m3) and does not creep.
@@ -249,6 +249,23 @@ Tuned MPM against DEM, error relative to DEM, mean over the pairs of one MPM run
 - **Tuned MPM carries 700 N with 0.6 cm.** This is below the failure load expected for its 40 deg sliding angle (1.6 to 3.4 kN) and for the specified 36 deg, so the difference from DEM A at 700 N is the known mismatch of the two materials. Not converged in the voxel (0.28 cm at 2 cm against 0.18 cm at 1 cm, 350 N, one run).
 - Not established: which of sampling, iteration cap and time step causes the compaction under load; DEM grain-size dependence. In DEM the load rose in 0.4 s and acted 1.9 s (MPM: 0.5 s and 2.0 s).
 - **For the paper's limitations:** at the training discretization the sand compacts under a static foot-sized load and overestimates sinkage by an order of magnitude against DEM.
+
+**Cause of the compaction (round 7; check 8, pass with caveats; website only).** The fixed-weight press of round 6 was repeated in MPM with one training setting changed at a time (reading fixed before the runs, commit 04bc505).
+
+| Setting | Sinkage at 150 / 350 / 700 N | Density under the box at 350 N | Time per step, one environment |
+|---|---|---|---|
+| Task settings (3 cm, 1.25 particles per cell edge, 5 cm jitter), three beds | 3.4 / 6.8 / 9.5 cm | +27% | 19 ms |
+| 100 or 250 iterations; step 2.5 or 1.25 ms; voxel 2 cm (one bed each) | 6.3 to 6.9 cm at 350 N | +24 to +29% | 23 to 87 ms |
+| GIMP transfer (one bed) | 5.0 cm at 350 N | +16% | 21 ms |
+| 2 particles per cell edge, one per sub-cell at random, three beds | 0.5 / 1.1 / 2.3 cm | +2.6% | 24 ms |
+| DEM A at 640 kg/m3 | 0.2 / 0.5 / 4.8 cm | | |
+
+- **The sparse, widely jittered particle sampling is the cause.** It is the only setting whose change alone stops the bed settling by itself; it cuts the sinkage six to sevenfold and the density rise under the box tenfold. Before the load 5% of the grid cells in the task-setting bed hold no particle and 21% hold one. Iterations, time step and voxel, each alone, change nothing beyond the bed-to-bed scatter; they were not tried together, and the solver uses every iteration allowed.
+- **The denser sampling is not a matched sand.** Under 150 and 350 N it sinks twice as deep as DEM A, and about 60% of that is still densification; at 700 N it holds where DEM A gives way, as a 36 degree sand should. In the horizontal push it builds the berm (2.3 against 2.1 cm) but the force is 1.93 times DEM A.
+- **Force agreement at task settings is a cancellation.** On the 3 cm grid the push force is 1.11 times DEM A with the sparse sampling and 1.7 to 2.1 times with dense sampling; on a 1 cm grid 1.37. The earlier statement that task settings agree with DEM A within about 10% stands as a number but not as evidence of agreement: a coarse-grid overestimate of about two is offset by sand that compacts ahead of the box.
+- **Cost:** 3.9 times the particles and 1.23 times the step time for one environment (about 0.3 GB more memory per bed of 1 x 1 x 0.25 m). Not measured with many environments, where the ratio will be higher and fewer environments will fit per GPU.
+- **For the paper:** forces from MPM are 1.1 to 1.9 times the DEM reference depending on discretization, so no quantitative force agreement is claimed; sinkage at the training setting is dominated by numerical compaction. No policy was trained at the new setting.
+- **Videos (round 7, part B):** ten real-time clips, MPM beside DEM, in `site/T8/media/`. In sync within one frame (the MPM gantry lag), same scale and framing. Single runs, for viewing only.
 
 Caveats:
 - **Neither simulator is the truth,** and there is no experiment.
