@@ -157,9 +157,9 @@ Caveats added by the third check:
 - **Nothing rises beside the foot** (0.00 to 0.08 L), and around the footprint 65 to 88% of the sunk volume is compaction, a density rise that reaches the bed base. This is the compaction of the sparsely sampled bed.
 - **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
 
-### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 4)
+### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 5)
 
-Checked four times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
+Checked six times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
 
 **Deformation.**
 - **Tuned MPM reproduces the surface deformation of DEM.** At 1 cm: trench 5.7 against 6.1 cm, side berm 2.8 against 2.4 cm, correlation of the height-change maps 0.95, the level of one DEM seed against another (0.96 to 0.97). The bed does not compact (it stays at 640 kg/m3) and does not creep.
@@ -185,7 +185,24 @@ Checked four times in `checks/T8.md` (pass with caveats each time). Conditions: 
 - **Open:** dependence of the MPM force on the box mass (the sand solver treats the box as a free 10 kg body within a step; not tested); the saved joint velocity reads 0.2 to 3.8% below the box's position rate, cause not identified; DEM is not converged in grain size (-71.1 N at 15 mm, -63.5 N at 11 mm).
 - **Effect on T1:** T1's box forces were recorded the same way and are too low by a factor that depends on the gantry (1.6 on the T1 gantry, 2.7 on a stiff one at task settings). They need the corrected recording before use.
 
+**Other motions (round 5, corrected; checks 5 and 6).** The same box in four motions, each in MPM and in DEM material A at the matching bed density: horizontal push (1 m), push downward to a set depth, push upward out of the sand, and a 90 degree twist at fixed depth; two speeds and two depths each, three MPM beds and three DEM seeds, MPM at task settings (3 cm) and tuned (1 cm, 8 particles per cell). The box is at the same depth (within 0.7 mm), speed, angle and timing in both. Cases and metrics were committed before any comparison existed. After check 5 the cells that the box covers are left out of every map measure in both simulators, because about 800 of 2,000,000 MPM particles rest up to 1.4 mm inside the box faces and set the surface height of those cells; penetration is reported only where it is a result.
+
+Tuned MPM against DEM, error relative to DEM, mean over the pairs of one MPM run and one DEM seed, with DEM seed against seed in brackets:
+
+| Quantity | Horizontal push | Push downward | Push upward | Twist |
+|---|---|---|---|---|
+| Dispersion: displacement of the sand by 4 cm cube | 27% (15%) | 33% (21%) | 61% and 64% from 6 cm (41%, 35%); 3 cm case too small to measure | 42% (25%) |
+| Deformation: berm or rim height | 12% (7%); 2.2 against 2.0 cm | 20% (6%); 0.7 against 0.8 cm | 13% (10%); 0.7 against 0.7 cm | 60% (14%); 1.25 / 1.35 / 1.47 against 1.01 / 0.98 / 0.72 cm |
+| Penetration: trench or residual pit depth | 7% (3%) | depth is commanded | 25% (4%), upper bound; 3.3 against 4.2 cm | depth is commanded |
+| Height-change map outside the box, correlation | 0.97 (0.98) | not informative | 0.90 (0.91) | not informative |
+
+- **Tuned MPM is above the DEM seed-to-seed level in the displacement of the sand in every motion** and closest in the horizontal push. The seed-to-seed level is a generous reference (it carries the grain noise twice and contains neither grain size nor material).
+- **Twist:** MPM piles sand at the corners of the turning box, 0.2 to 0.8 cm higher than DEM. The excess is confined to the 4 cm ring the corners sweep; one cell further out the rim agrees at the DEM seed level (14% against 14%). DEM with 15 mm grains does not resolve that ring.
+- **Pull-out:** the tuned MPM sand moves 0.50 and 0.39 of the DEM displacement during the lift (6 cm cases). The pit floor is at the same depth (5.8 against 5.9 to 6.1 cm); the footprint mean is 0.8 to 1.2 cm shallower in MPM, of which a part of the order of the grain radius is the DEM surface measure on the sloping pit wall.
+- **Press and twist maps:** outside the box the surface changes by about 1 cm, the cell noise of a DEM map with 15 mm grains; map correlation there does not distinguish the simulators and is not reported. The first-version results "press penetration error 42%" and "twist map error 82%, correlation 0.63" were artefacts of the box cells and are withdrawn.
+- **Task settings** are further from DEM in the displacement in every motion (44 / 67 / 103 / 69%) and build no berm or rim (-0.3 to -0.1 cm against 0.7 to 2.1 cm).
+- **Paper figure `t8_mpm_dem_stats.pdf`** (corrected: penetration, rim or berm height, displacement; tuned MPM; hatched DEM seed level): usable, with a caption that explains "depth set", that error bars are the spread within a case and dots the case means, that the twist rim bar is the corner ring, and that the push-up displacement bar includes a case too small to measure.
+
 Caveats:
 - **Neither simulator is the truth,** and there is no experiment.
-- **One motion type** (horizontal drag at one speed and depth); stamping, pull-out and twisting are being run (round 5).
-- **Provenance:** `~/isaac/dem_compare` (commit `08fce3e`) has no remote.
+- **Provenance:** `~/isaac/dem_compare` (commit `d52aa4d`) has no remote.
