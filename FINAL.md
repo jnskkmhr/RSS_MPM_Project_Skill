@@ -80,6 +80,15 @@ Caveats:
 - **The lean is not only a response to tension.** With the tether cut the MPM-trained policy's pitch already rises with softness (9 to 15 degrees); the extra pitch from the cube does not follow tension.
 - **The baselines tow on too few grounds** (rigid 1, RFT 2) to say whether their pitch adapts less.
 
+**Load control: is it the tension or the ground? (merged 2026-11-24, `checks/T2.md` Check 4, pass with caveats).** RFT-trained and MPM-trained tow policies, 0.5 m/s command, 16 trials per cell, same settings as the sweep; lighter cubes on the 7 stiffer MPM sands, heavier cubes on rigid ground and RFT sand.
+- **The RFT-trained policy carries on other grounds the tension it falls under on MPM sand.** Rigid ground: 16 of 16 with 21 kg (83 N), 11 of 16 with 24 kg (95 N, the rest at the time limit); RFT sand: 16 of 16 with 18 kg (88 N) and with 20 kg (98 N); no fall in these 64 trials. MPM sands: 111 of 112 with 8 kg (41 to 47 N), 92 of 112 with 10 kg (53 to 60 N), 12 of 112 with 15 kg (83 to 94 N); every miss is a fall.
+- **Its falls on MPM sand grow with the load,** on every sand; the step from 10 to 15 kg is clear everywhere.
+- **Why it falls there:** on MPM sand it walks faster than commanded and pitched forward (cube at 0.66 to 0.80 m/s for a 0.5 m/s command and 21 to 28 degrees of torso pitch with the 8 and 10 kg cubes), so a tow load it carries elsewhere tips it over. Its start-up pelvis pitch peaks at 22 to 29 degrees without the cube, 31 to 38 degrees with 10 kg and 41 to 44 degrees with 15 kg, against a fall limit of 45 degrees. The tension before a fall is no higher than what it survives.
+- **The MPM-trained policy tows every cube on every MPM sand,** 16 of 16, at 0.53 to 0.56 m/s with 14 to 17 degrees of pitch.
+- **Not supported: "the RFT-trained policy fails because MPM sand needs more force than it can produce."** The data contradicts it as the mechanism.
+- **Goal definition.** A goal counts 10 m of robot path, not net distance. On RFT sand the MPM-trained policy's "goal" trials moved 6.3 m net with 15 kg, and 4.7 and 3.7 m with 18 and 20 kg (12 of 16 goals, cube at 0.10 to 0.12 m/s). "The MPM-trained policy works on RFT sand" in the goals table above holds as "stays up", not as towing the cube 10 m.
+- Compared speeds are unequal in the heavy-cube cells (0.29 to 0.43 m/s).
+
 ### Q3 / T3: walking on slopes and on softer sand (merged 2026-11-24)
 
 Checked twice in `checks/T3.md` (first runs, then the final-checkpoint rerun). Every number below reproduces from the raw trial files. Conditions: G1 walking at a 1.0 m/s command; policies MJWarp `3qymp37c`, RFT `6t0h2ud8`, MPM `aga5ovkp`, all at iteration 19,999, run together in every workflow; evaluated in MPM on a 0.50 m sand bed unless stated; one training run per policy.
