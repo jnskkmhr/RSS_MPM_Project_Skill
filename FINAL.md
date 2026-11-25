@@ -157,9 +157,9 @@ Caveats added by the third check:
 - **Nothing rises beside the foot** (0.00 to 0.08 L), and around the footprint 65 to 88% of the sunk volume is compaction, a density rise that reaches the bed base. This is the compaction of the sparsely sampled bed.
 - **Whether a policy's degradation follows flow is not shown.** Flow and sinkage have the same rank order over the grounds, the test has four to six grounds, and there are no footprints where MJWarp falls. Not merged: the rank correlations, and how much more sand MJWarp moves where it fails.
 
-### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 5)
+### T8: MPM against DEM in a box drag (merged 2026-11-24, revised after round 6)
 
-Checked six times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
+Checked seven times in `checks/T8.md` (pass with caveats each time). Conditions: box 0.2 x 0.2 x 0.1 m dragged at 0.5 m/s with its underside 6 cm below the mass-equivalent surface (one function for both simulators); sand preset `poppy_seed_loose`; DEM in Chrono DEM-Engine, material A (three-sphere clumps, 15 mm unless stated); all runs on OSMO. Two MPM discretizations: task settings (3 cm voxel, about 2 particles per cell, 5 ms step, 25 iterations), where policies train, and tuned settings (8 particles per cell, step scaled with the voxel, 250 iterations).
 
 **Deformation.**
 - **Tuned MPM reproduces the surface deformation of DEM.** At 1 cm: trench 5.7 against 6.1 cm, side berm 2.8 against 2.4 cm, correlation of the height-change maps 0.95, the level of one DEM seed against another (0.96 to 0.97). The bed does not compact (it stays at 640 kg/m3) and does not creep.
@@ -202,6 +202,21 @@ Tuned MPM against DEM, error relative to DEM, mean over the pairs of one MPM run
 - **Press and twist maps:** outside the box the surface changes by about 1 cm, the cell noise of a DEM map with 15 mm grains; map correlation there does not distinguish the simulators and is not reported. The first-version results "press penetration error 42%" and "twist map error 82%, correlation 0.63" were artefacts of the box cells and are withdrawn.
 - **Task settings** are further from DEM in the displacement in every motion (44 / 67 / 103 / 69%) and build no berm or rim (-0.3 to -0.1 cm against 0.7 to 2.1 cm).
 - **Paper figure `t8_mpm_dem_stats.pdf`** (redrawn after check 6): penetration, deformation, dispersion; tuned MPM; hatched DEM seed level. Deformation there is the berm or rim height one cell away from the box, so that it does not hinge on the ring the corners sweep: 12% (7%) / 23% (10%) / 14% (12%) / 14% (14%) for push, push downward, push upward, twist. The twist value was confirmed by check 6; the other three are the T8 agent's recomputation with that measure and have not been rechecked (check 6 found them unchanged by excluding one more ring). Push-upward dispersion in the figure is from the 6 cm cases, 62% (38%). Error bars: spread within a case; dots: case means.
+
+**Fixed-weight press (round 6; check 7, pass with caveats; website only).** The box (0.2 x 0.2 x 0.1 m, 10 kg) rests on the sand, is free vertically in both simulators and is pressed by a set total load of 50, 150, 350 or 700 N (1.25 to 17.5 kPa; a G1 sole is about 14 kPa in double stance and 29 kPa in single stance). Three beds or seeds per case, 48 runs. That the box is free was checked from its motion (sand force equals load plus mass times acceleration throughout) and at rest (within 0.11%).
+
+| Total load | MPM task settings (3 cm) | DEM A, 733 kg/m3 | MPM tuned (1 cm) | DEM A, 640 kg/m3 |
+|---|---|---|---|---|
+| 50 N | 1.64 cm | 0.10 cm | 0.06 cm | 0.07 cm |
+| 150 N | 3.46 | 0.21 | 0.09 | 0.22 |
+| 350 N | 6.81 | 0.47 | 0.18 | 0.53 |
+| 700 N | 9.49 | 3.38 | 0.60 | 4.77 |
+
+- **Task-setting MPM compacts under load.** It sinks 13 to 17 times deeper than DEM up to 350 N and is still sinking after 2 s (0.1 to 0.3 cm in the last 0.5 s). Nothing rises around the box; the density under it rises by about a quarter at 350 N. About 0.4 cm of each value is the bed settling by itself during the run.
+- **DEM A gives way between 350 and 700 N, with heave,** where a bearing-capacity estimate for a 32 deg sand of this density puts it (about 450 to 850 N). Its light-load sinkages follow a pre-press of up to 77 N during placement. One grain size (15 mm).
+- **Tuned MPM carries 700 N with 0.6 cm.** This is below the failure load expected for its 40 deg sliding angle (1.6 to 3.4 kN) and for the specified 36 deg, so the difference from DEM A at 700 N is the known mismatch of the two materials. Not converged in the voxel (0.28 cm at 2 cm against 0.18 cm at 1 cm, 350 N, one run).
+- Not established: which of sampling, iteration cap and time step causes the compaction under load; DEM grain-size dependence. In DEM the load rose in 0.4 s and acted 1.9 s (MPM: 0.5 s and 2.0 s).
+- **For the paper's limitations:** at the training discretization the sand compacts under a static foot-sized load and overestimates sinkage by an order of magnitude against DEM.
 
 Caveats:
 - **Neither simulator is the truth,** and there is no experiment.
