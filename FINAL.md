@@ -11,6 +11,8 @@ Written by the lead. Only results with a passing check in `checks/` go here, and
 | Q5 | Particle NeRD gives a net speedup and transfers to MPM (hardware optional) | T5 | — | — | no output yet |
 | — | Gate: each deployed policy passed sim-to-sim before hardware | T6 | — | — | no output yet |
 
+> **Condition on every MPM-sand result in this file (found 2026-11-25, checked in `checks/T5.md` Check 3; effect on the results not yet measured).** In MPM sand environments the foot collision box carries a 2 cm contact margin (scene configuration, `collision_props` on `*_ankle_roll_link`; 0 in the rigid and RFT tasks). With it the shin (knee link) touches the foot and stops the ankle pitch at about -0.46 rad toes-up, 26 of the joint's 50 degrees; the real robot has no such stop. On MPM sand no policy passes -0.51 rad; on rigid ground each policy is beyond -0.50 rad 57 to 95 % of the time. The MPM walking policy `aga5ovkp` and the MPM tow policy `her588wk` were trained with the stop on sand; the baselines never met it in training and meet it in every MPM evaluation. A 3-trial local pilot at +30 degrees with the shin-foot pair filtered: MPM 0 of 3 (3 of 3 with the stop), RFT 2 of 3 (2 of 3); a pilot, not a result. At risk until the filtered rerun is in: the slope tables (tile and planar), MJWarp's failures on MPM sand, sole angles, sand under the sole, the knee and torque analyses, the tow tables on MPM sand, the rigid-against-sand reversal, the NeRD-to-MPM transfer numbers. Not at risk: T1 cost, T8 (box margin 0), T5 timings, results on rigid ground or RFT sand taken alone.
+
 ## Merged findings
 
 ### Q1 / T1: streaming MPM benchmark (merged 2026-11-19)
