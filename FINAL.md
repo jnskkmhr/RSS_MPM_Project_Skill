@@ -296,3 +296,20 @@ Tuned MPM against DEM, error relative to DEM, mean over the pairs of one MPM run
 Caveats:
 - **Neither simulator is the truth,** and there is no experiment.
 - **Provenance:** `~/isaac/dem_compare` (commit `d52aa4d`) has no remote.
+
+### T5: Particle NeRD in place of MPM for the G1 walking task (first merge 2026-11-25; training still running)
+
+Checked twice in `checks/T5.md`. Workspace `~/isaac/worktrees/mpm-unification/IsaacLab-particle-nerd` (task `IsaacContrib-Velocity-G1-29dof-ParticleNeRD-Mixed`, package `g1_29dof_nerd`); the unified worktree was left untouched. Training run W&B `657cyza6` (corrected step) in progress; the first run `rcvgr7b9` trained on a faulty recorded-graph step and is not used.
+
+- **Setup.** The mixed-terrain G1 task of `aga5ovkp` with the sand part stepped by Particle NeRD (local model). Only the sand solver, the material (one fixed sand, NeRD's training material, where the reference randomized it) and the particle sampling differ; the GPU type also differs.
+- **Sand step alone, one clean L40:** Particle NeRD 9.2 ms, MPM 37.0 ms with NeRD's sand and 44.3 ms with the reference sand, a ratio of 4.0 to 4.8. NeRD steps 1,536 of 20,000 particles.
+- **Environment step as trained:** about 1.7 times faster than MPM, with about a fifth of the GPU memory. Rigid collision detection, shared by both tasks, takes 40 to 48 ms per physics step, because the MPM solver and the NeRD driver convert every convex collision shape of the scene to a triangle mesh, including the robot's 22 link hulls, which are not sand colliders.
+- **With the robot's hulls kept convex** (a wrapper; no trained policy used it): collision detection 40.1 to 0.33 ms (NeRD task) and 48.4 to 0.34 ms (MPM task); environment step 222 to 60 ms and 381 to 202 ms. Feet on sand are untouched (the sand colliders are the foot boxes). Self-collision and non-foot contact with rigid ground change route, and on NeRD sand the pelvis rides 1.3 cm higher, so the physics is not shown to be unchanged.
+- **Transfer to MPM so far:** at iteration 5,000 of 20,000 the NeRD-trained policy reaches the goal on level sand of every ladder material in MPM (10 of 10 each), falls in 5 of 10 trials on the +20 degree slope tile, and in its own training task run in MPM its episodes end about once per sand robot in 10 s (MPM policy of the same iteration: about one in eight).
+- **NeRD's sand is firmer than MPM's at the training setting:** with the same sand and policy the feet sink about 3.6 cm against 8.1 cm in MPM (64 environments); MPM's value is at the compacting training discretization.
+
+Caveats:
+- **No training speed-up can be stated yet.** Per training iteration NeRD is about 1.7 times faster on unequal GPUs, and the policy does not yet transfer to MPM on slopes or on its own task. The 3.4 times with convex links is a set-up no policy has used.
+- **Every G1 MPM training and evaluation in this project paid the avoidable collision cost** (unified code, `mpm_solver.py`). Of the numbers above this affects T2's "46.2 hours on 40 L40 GPUs"; T1's box-probe cost numbers are not affected (the box is a primitive). T1's G1 training-speed rows are inflated on both sides.
+- **The fix cannot simply skip the robot:** towed objects are convex-hull sand colliders and need the conversion.
+- **NeRD is used outside its training data** in this task: it never saw a foot load, a tilted floor, slopes above 10 degrees or the task's waves.
