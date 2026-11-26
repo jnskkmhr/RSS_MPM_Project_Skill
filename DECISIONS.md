@@ -44,3 +44,10 @@ Append-only. Newest at the bottom. One entry per decision: date, decision, why.
 - Are MJWarp-Rough (`3qymp37c`) and RFT-Rough (`6t0h2ud8`) retrained from the unified commit? They were trained in the old worktree, while `tasks/T3.md` asks for one commit.
 - Page limit and deadline.
 - Sand bed compaction (raised 2026-11-24 by T3, T8, and T1; T1's cause is unchecked). The bed is sampled at about 1.25 particles per cell edge, compacts about 15% after generation, and keeps sinking while awake; sleeping freezes it mid-compaction. The policies were trained on this bed. Choices: (a) keep the sampling and report it as a stated limit, with one settling rule for every evaluation; (b) raise the sampling to 1.6 particles per edge (2.1 times the particles), which changes cost numbers and may need retraining. Three tests proposed by T1 wait for a go-ahead: foot sinkage at 1.6 and 2 particles per edge, GIMP at the current count, sinkage against wake margin.
+
+## 2026-11-25 (night): shin-foot stop on MPM sand — open, the user's decision
+
+- Checked (`checks/T5.md` Check 3): on MPM sand the foot's 2 cm contact margin makes the shin touch the foot and stops the ankle at 26 of 50 degrees toes-up; rigid and RFT tasks have no such stop; `aga5ovkp` and `her588wk` trained with it.
+- Unchecked interim (T3, tile +30 degrees, 40 trials per arm, same workflows): with the contact MJWarp 0, RFT 13, MPM 40 of 40; without it MJWarp 0, RFT 28, MPM 1 of 40. The Q3 slope headline does not survive removal of the contact for the policies as trained.
+- Evaluation reruns without the contact are running (T3 walking, T2 towing); readings committed before the runs (`22181d3`, `cdf3663`).
+- Not started, waiting for the user: which fix (filter the shin-foot pair, or give the margin to the sand solver only); retraining of the MPM walking and tow policies without the stop; whether NeRD run `657cyza6` continues as is; remaining long-climb waves with or without the contact; paper C-1 and C-3 text on hold.
