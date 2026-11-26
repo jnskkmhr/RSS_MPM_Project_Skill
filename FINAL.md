@@ -29,7 +29,7 @@ Conditions for every number: box probe (0.2 x 0.2 x 0.1 m, 10 kg), material `pop
 - Largest count that ran: full 4 (2 with sleeping); stream without cache 64; stream with cache 64 (32 with sleeping). Counts were doubled, so each limit lies between that count and the next.
 - Per environment at the largest count: full 6,321 MiB and 126 ms; stream without cache 327 MiB and 5.2 ms; stream with cache 451 MiB and 5.8 ms.
 
-**Terrain history** (box on a lemniscate, two laps, sleep off):
+**Terrain history** (box on a lemniscate, two laps, sleep off, cache with its tile template left unsettled, heights relative to each mode's own surface, box held at a fixed height):
 - Height of the revisited track against full: 0.96 cm rms with the cache, which is the level of a repeated full run (0.83 cm); 4.97 cm median without the cache, where the track is lost.
 - Drag on the revisited lap: full -26.7 N, with cache -29.4 N, without cache -54.3 N. The cache reproduces the drop in drag on revisit to within 10%; without it there is no drop.
 - G1 on the same path: footprints are kept with the cache and lost without it. The percentages in the output depend on the reference level and are not merged.
