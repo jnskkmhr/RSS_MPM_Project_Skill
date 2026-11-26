@@ -115,6 +115,8 @@ Caveats:
 
 ### Q3 / T3: walking on slopes and on softer sand (merged 2026-11-24)
 
+> **Condition found 2026-11-25 (T3, not yet checked): the slope is not a planar ramp.** Every slope result below was run on the training slope tile, a pyramid whose height is the product of two ramps, walked along its axis: uphill the robot climbs the floor of a V-shaped valley, downhill it follows a ridge. The angle along the walk is within about 1 degree of nominal; under each foot the ground also rises sideways (at +30 degrees: 19 to 20 degrees at 3 m from the centre, 11 degrees at 5 m, 6 degrees at 6.5 m; at +20 degrees: 12.6, 7.4, 3.6 degrees). Read "a slope of X degrees" as "the training slope tile at X degrees, walked along its axis". A planar-ramp counterpart of the slope table is being run; until it is in, the comparison between policies on a planar slope, which is what a real slope and the hardware testbed are, is not established.
+
 Checked twice in `checks/T3.md` (first runs, then the final-checkpoint rerun). Every number below reproduces from the raw trial files. Conditions: G1 walking at a 1.0 m/s command; policies MJWarp `3qymp37c`, RFT `6t0h2ud8`, MPM `aga5ovkp`, all at iteration 19,999, run together in every workflow; evaluated in MPM on a 0.50 m sand bed unless stated; one training run per policy.
 
 **Slopes on firm sand (beach sand, 1800 kg/m3, friction 0.80).** Goals reached uphill, 40 trials per cell from +15 to +30 degrees:
