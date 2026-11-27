@@ -515,3 +515,27 @@ Caveats:
 - **Every G1 MPM training and evaluation in this project paid the avoidable collision cost** (unified code, `mpm_solver.py`). Of the numbers above this affects T2's "46.2 hours on 40 L40 GPUs"; T1's box-probe cost numbers are not affected (the box is a primitive). T1's G1 training-speed rows are inflated on both sides.
 - **The fix cannot simply skip the robot:** towed objects are convex-hull sand colliders and need the conversion.
 - **NeRD is used outside its training data** in this task: it never saw a foot load, a tilted floor, slopes above 10 degrees or the task's waves.
+
+
+**The NeRD-trained policy in MPM at four checkpoints (merged 2026-11-27, `checks/T5.md` Check 4, pass with corrections; reading committed before the checkpoints).** Policies: Particle NeRD `2qvrpyy8` (16 L40 x 256 environments, one sand, 33.9 h) and MPM `j0scsgdy` (40 L40S x 64 environments, randomized sand, 35.3 h), both 20,000 iterations on the code without the shin-foot stop; at every iteration the NeRD-trained policy has had 1.6 times the samples (1.97 against 1.23 billion environment steps at the end). One training run each; every evaluation cell is one run on a local RTX 5090.
+
+- **T3's walking test in MPM** (level beach sand, dense sand, light sand, packed and loose poppy seed, and +20° beach sand on the pyramid tile; 1.0 m/s, 5 m; 2 runs of 5 robots per ground; voxel 0.02 m, 0.25 m bed, tile-cache preset with the task's sleeping and 1.2 m window, drop start; sand solve capped at 25 iterations, and at 100 from 10,000 on). Goals / walking goals of 10, NeRD-trained against MPM-trained:
+
+  | Iteration | Five level grounds | +20°, cap 25 | +20°, cap 100 |
+  |---|---|---|---|
+  | 5,000 | 10 / 10 on all against 10 / 10 (dense sand 9 / 9) | 0 / 0 against 10 / 3 | not run |
+  | 10,000 | 10 / 10 against 10 / 10 (dense sand at cap 100: 9 / 9) | 2 / 0 against 10 / 8 | 4 / 0 against 9 / 9 |
+  | 15,000 | 10 / 10 against 10 / 10 | 10 / 10 against 10 / 10 | 10 / 10 against 10 / 10 |
+  | 19,999 | 10 / 10 against 10 / 10 | 10 / 10 against 10 / 10 | 10 / 10 against 10 / 10 |
+
+  At the end the NeRD-trained policy crosses at 0.86 to 0.88 of the command on level ground and 0.81 to 0.83 at +20°; the MPM-trained policy at 0.94 to 0.98 and 0.89 to 0.92. At 15,000 the NeRD-trained policy's +20° walking goals are at 0.72 to 0.74, just above the rule's 0.7.
+- **Own training task in MPM** (mixed task, NeRD's training sand 1600 kg/m³ / 0.48, voxel 0.04 m, 0.25 m bed, pool without cache, 16 robots of which 8 on sand, 10 s, seed 42). Velocity error on sand, NeRD-trained against MPM-trained, cap 25 (cap 100): 0.245 against 0.254 at 5,000; 0.255 against 0.195 (0.257, 0.195) at 10,000; 0.192 against 0.133 (0.197, 0.130) at 15,000; 0.225 against 0.122 (0.212, 0.118) at the end, 1.85 (1.79) times. Episode ends on the 8 sand robots: 6 against 3; 6 against 2 (5, 2); 4 against 3 (4, 3); 4 against 4 (4, 4). By the reading committed beforehand (ends at most the MPM policy's plus 2, velocity error at most 1.5 times) the NeRD-trained policy does not carry over to MPM sand on its own task at the end, at either cap.
+- **The surrogate's sand carries the robot higher than MPM's.** Same sand, same policy, lower foot's origin against the generated surface, mean over the run: -0.8 cm on NeRD sand and -9.3 cm on MPM sand (-8.7 cm at cap 100) for the final NeRD-trained policy; -3.9 and -6.8 cm (-6.1 cm) for the final MPM-trained policy; +2.5 cm on the rigid tiles of the same runs.
+
+Limits:
+- **Counts of 8 robots and of 10 near-identical trials.** No difference in episode ends is distinguishable from chance (a difference of 5 of 8 would be); 10 of 10 excludes a failure rate above about 30%. From 15,000 on every cell of T3's test is at the ceiling for both policies, so that test does not rank them; the crossing speed does, in 12 of 12 cells.
+- **Episode ends are not falls.** The kinds were not recorded; 40 of 44 ends at cap 25 come after 5.4 s, when a robot can have reached the patch edge 3.5 m away; inside MPM two sand robots end in every run and two in none, so the two policies differ on four robots. One of the 8 sand robots carries part of its weight on rigid ground in every run.
+- **The MPM of these tests is not converged.** T3's test here ran on the 0.02 m grid at 25 and 100 sweeps (`checks/T3.md` Checks 18 and 19); equal counts at the two caps are a ceiling, and the feet are 1 to 2.6 cm higher at cap 100. The bed is 0.25 m: the deepest steps at +20° and on loose poppy seed come within 4 to 6 cm of the rigid base; none is pinched. Only the feet feel sand.
+- **No control trained without sand was run in these cells**, so the test does not show that what transfers was learned from the surrogate's sand.
+- **Within the training-task test the NeRD arm gives a fifth of the robots a standing command and the MPM arm none.** Numbers that compare one policy between the two simulators (ends, velocity error) carry this; the comparison of the two policies inside MPM does not.
+- **No training speed-up follows.** 542 against 1,412 GPU-hours and 1,008 against 242 environment steps per GPU-second mix the simulator with 256 against 64 environments per GPU, L40 against L40S, one sand against randomized sand and 1.6 times the samples, and the two trainings do not reach the same tracking in MPM.
